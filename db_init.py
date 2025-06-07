@@ -199,10 +199,11 @@ def seeds_tables(seed, cursor):
 
 cxn = mysql.connector.connect(**DB_CONFIG)
 cursor = cxn.cursor()
+create_database(cursor)
 cursor.close()
 cxn.close()
 
-create_database(cursor)
+
 CONF_DB = DB_CONFIG.copy()
 CONF_DB['database'] = DB_NAME
 cxn = mysql.connector.connect(**CONF_DB)
