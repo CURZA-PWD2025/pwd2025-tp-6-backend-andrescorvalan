@@ -8,11 +8,16 @@ class ProveedorController:
     
     @staticmethod
     def get_one(id: int) -> dict:
-        return ProveedorModel.get_one(id)
+        return ProveedorModel(id = id).get_one()
     
     @staticmethod
     def create(data: dict) -> dict:
-        result = ProveedorModel().create(data)
+        result = ProveedorModel(
+            nombre = data['nombre'],
+            telefono = data['telefono'],
+            direccion = data['direccion'],
+            email = data['email']
+        ).create()
         if result==True:
             return {'estado':'ok', 'mensaje': 'Proveedor creado con exito'}
         elif result==False:
@@ -22,7 +27,13 @@ class ProveedorController:
 
     @staticmethod
     def update(data: dict) -> dict:
-        result = ProveedorModel().update(data)
+        result = ProveedorModel(
+            id = data['id'],
+            nombre = data['nombre'],
+            telefono = data['telefono'],
+            direccion = data['direccion'],
+            email = data['email']
+        ).update()
         if result==True:
             return {'estado':'ok', 'mensaje': 'Proveedor actualizado con exito'}
         elif result==False:
@@ -36,7 +47,6 @@ class ProveedorController:
         if result==True:
             return {'estado':'ok', 'mensaje': 'Proveedor eliminado con exito'}
         elif result==False:
-            return {'estado':'error', 'mensaje': 'No se pudo eliminar el proveedor'}
+            return {'estado':'error', 'mensaje': 'No se encontro el proveedor a eliminar'}
         else:
             return {'estado':'exception', 'mensaje': 'No se pudo eliminar el proveedor en la BD por una excepción'}
-

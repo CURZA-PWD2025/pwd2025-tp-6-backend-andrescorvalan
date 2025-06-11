@@ -19,34 +19,45 @@ class MarcaModel:
             nombre = data['nombre'],
         )
     
+    @staticmethod
+    def verificar_existencia(data: dict) -> dict:
+        #verifica que los datos de data coinidan con un registro de la BD (todos los campos)
+        #return: {} si esta bien {errores} si esta mal
+        marca_bd = MarcaModel(data['id']).get_one()
+        if not marca_bd:
+            return {'estado':'error', 'mensaje': 'La marca recibida no existe en la base de datos'}
+        if marca_bd['nombre'] != data['nombre']:
+            return {'estado':'error', 'mensaje': 'Datos de la marca inconsistentes con la base de datos'}
+        return {}
+
     #----Metodo estatico para obtener una lista de las marcas
     @staticmethod
     def get_all() -> list[dict]:
        return OperarBD.obtenerReg("SELECT * FROM MARCAS")
     
     #----Metodo estatico para obtener una marca
-    @staticmethod
-    def get_one(id: int) -> dict:
-        registros = OperarBD.obtenerReg("SELECT * FROM MARCAS WHERE id=%s",(id,))
+    def get_one(self) -> dict:
+        registros = OperarBD.obtenerReg("SELECT * FROM MARCAS WHERE id=%s",(self.id,)) #Siempre sera 0 o 1 registro
         if registros:
-            return registros[0] #Tomar el dict dentro de la lista
+            self.nombre = registros[0]['nombre']
+            return registros[0] 
         else:
             return {}
-   
+        
     #----Metodo para crear una marca
-    def create(self, data: dict) -> bool | None:
-        result = OperarBD.modifBD("INSERT INTO MARCAS (nombre) VALUES (%s)",(data['nombre'],))
-        #Analisis del resultado
+    def create(self) -> bool | None:
+        result = OperarBD.modifBD("INSERT INTO MARCAS (nombre) VALUES (%s)",(self.nombre,))
         if result>0:
-            return True     #Se inserto en una tabla con PK auto-increment. Devolvio el nuevo id (no usado aqui) 
+            self.id = result
+            return True     #Se inserto en una tabla con PK auto-increment. Devolvio el nuevo id
         else:
             return result   #result=True: Se inserto en una table con PK no auto-increment
                             #result=False: No se pudo insertar
                             #result=None: Alguna excepcion
-
+   
     #----Metodo para modificar una marca
-    def update(self, data: dict) -> bool | None:
-        result = OperarBD.modifBD("UPDATE MARCAS SET nombre=%s WHERE id=%s",(data['nombre'],data['id'],))
+    def update(self) -> bool | None:
+        result = OperarBD.modifBD("UPDATE MARCAS SET nombre=%s WHERE id=%s",(self.nombre,self.id,))
         if result==0:       #El motor de BD no pudo actualizar la marca
             return False
         elif result==1:     #El motor de BD si pudo actualizar la marca
@@ -55,8 +66,9 @@ class MarcaModel:
             return None     #Alguna excepcion
 
     #----Metodo para eliminar un mara
-    def delete(self, id: int) -> bool | None:
-        result =  OperarBD.modifBD("DELETE FROM MARCAS WHERE id=%s",(id,))
+    @staticmethod
+    def delete(id: int) -> bool | None:
+        result = OperarBD.modifBD("DELETE FROM MARCAS WHERE id=%s",(id,))
         if result==0:       #El motor de BD no pudo eliminar la marca
             return False
         elif result==1:     #El motor de BD si pudo eliminar la marca

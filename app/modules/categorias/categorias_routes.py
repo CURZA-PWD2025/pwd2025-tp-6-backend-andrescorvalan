@@ -9,18 +9,18 @@ def get_all() -> dict:
     try:
         categorias = CategoriaController.get_all()
         if categorias:
-            data = {
-                "mensaje": "bien",
-                "datos": categorias
-            }
+            #data = {
+            #    "mensaje": "bien",
+            #    "datos": categorias
+            #}
             code = 200
         else:
-            data = {
-                "mensaje": "vacio",
-                "datos": []
-            }
+            #data = {
+            #    "mensaje": "vacio",
+            #    "datos": []
+            #}
             code = 404
-        return jsonify(data), code
+        return jsonify(categorias), code
     except Exception as una_execpcion:
         return jsonify({'mensaje': f"error {str(una_execpcion)}"}), 500
 
@@ -41,10 +41,8 @@ def get_one(id: int) -> dict:
 def create() -> dict:
     try:
         data = request.get_json()
-        #controlar que se reciban datos
         if not data:
             return jsonify({'estado': 'error', 'mensaje': 'Petición no valida'}), 400
-
         dict_categ = CategoriaController.create(data)
         if dict_categ['estado']=='ok':
             return  jsonify(dict_categ), 201
@@ -58,7 +56,6 @@ def create() -> dict:
 def update(id: int) -> dict:
     try:
         data = request.get_json()
-        #controlar que se reciban datos
         if not data:
             return jsonify({'estado': 'error', 'mensaje': 'Petición no valida'}), 400
         #controlar que el id de la url coincida con el de data
@@ -79,7 +76,6 @@ def update(id: int) -> dict:
 @categoria_bp.route("/categorias/<int:id>", methods = ["DELETE"])
 def delete(id: int) -> dict:
     try:
-
         dict_categ = CategoriaController.delete(id)
         if dict_categ['estado']=='ok':
             return  jsonify(dict_categ), 200

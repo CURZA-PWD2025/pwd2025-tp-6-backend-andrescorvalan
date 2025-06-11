@@ -141,9 +141,11 @@ class TransaccionBD:
     def operacionBD(self, sql: str, params: tuple=()) -> bool:
         if not self.conexion or not self.conexion.is_connected():
             raise RuntimeError("Operacion de DML: no se está dentro de una transacción activa.")
-       
+    
         self.cursor.execute(sql, params)
+    
         if self.cursor.rowcount >= 1:
+            print('sdasd')
             self.nuevo_id = self.cursor.lastrowid #Guardar el nuevo ID
             return True
         else:

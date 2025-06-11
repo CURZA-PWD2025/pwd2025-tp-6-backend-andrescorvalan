@@ -9,18 +9,18 @@ def get_all() -> dict:
     try:
         articulos = ArticuloController.get_all()
         if articulos:
-            data = {
-                "mensaje": "bien",
-                "datos": articulos
-            }
+            #data = {
+            #    "mensaje": "bien",
+            #    "datos": articulos
+            #}
             code = 200
         else:
-            data = {
-                "mensaje": "vacio",
-                "datos": []
-            }
+            #data = {
+            #    "mensaje": "vacio",
+            #    "datos": []
+            #}
             code = 404
-        return jsonify(data), code
+        return jsonify(articulos), code
     except Exception as una_execpcion:
         return jsonify({'mensaje': f"error {str(una_execpcion)}"}), 500
     

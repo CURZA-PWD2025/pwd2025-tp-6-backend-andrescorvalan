@@ -9,18 +9,18 @@ def get_all() -> dict:
     try:
         marcas = MarcaController.get_all()
         if marcas:
-            data = {
-                "mensaje": "bien",
-                "datos": marcas
-            }
+            #data = {
+            #    "mensaje": "bien",
+            #    "datos": marcas
+            #}
             code = 200
         else:
-            data = {
-                "mensaje": "vacio",
-                "datos": []
-            }
+            #data = {
+            #    "mensaje": "vacio",
+            #    "datos": []
+            #}
             code = 404
-        return jsonify(data), code
+        return jsonify(marcas), code
     except Exception as una_execpcion:
         return jsonify({'mensaje': f"error {str(una_execpcion)}"}), 500
     
@@ -61,6 +61,7 @@ def update(id: int) -> dict:
         #controlar que el id de la url coincida con el de data
         if 'id' in data and data['id'] != id: 
             return jsonify({'estado': 'error', 'mensaje': 'El id en la URL no coincide con el id de los datos recibidos'}), 400
+        
         data['id'] = id     #por si el id no esta en data
 
         dict_marca = MarcaController.update(data)

@@ -8,21 +8,26 @@ class MarcaController:
     
     @staticmethod
     def get_one(id: int) -> dict:
-        return MarcaModel.get_one(id)
+        return MarcaModel(id = id).get_one()
     
     @staticmethod
     def create(data: dict) -> dict:
-        result = MarcaModel().create(data)
-        if result==True:
+        result = MarcaModel(
+            nombre = data['nombre']
+        ).create()
+        if result == True: 
             return {'estado':'ok', 'mensaje': 'Marca creada con exito'}
-        elif result==False:
+        elif result == False:
             return {'estado':'error', 'mensaje': 'No se pudo crear la marca'}
         else:
             return {'estado':'exception', 'mensaje': 'No se pudo insertar la marca en la BD por una excepción'}
 
     @staticmethod
     def update(data: dict) -> dict:
-        result = MarcaModel().update(data)
+        result = MarcaModel(
+            id = data['id'],
+            nombre = data['nombre']
+        ).update()
         if result==True:
             return {'estado':'ok', 'mensaje': 'Marca actualizada con exito'}
         elif result==False:
@@ -32,11 +37,10 @@ class MarcaController:
 
     @staticmethod
     def delete(id: int) -> dict:
-        result = MarcaModel().delete(id)
+        result = MarcaModel.delete(id)
         if result==True:
             return {'estado':'ok', 'mensaje': 'Marca eliminada con exito'}
         elif result==False:
-            return {'estado':'error', 'mensaje': 'No se pudo eliminar la marca'}
+            return {'estado':'error', 'mensaje': 'No se encontro la marca a eliminar'}
         else:
             return {'estado':'exception', 'mensaje': 'No se pudo eliminar la marca en la BD por una excepción'}
-
